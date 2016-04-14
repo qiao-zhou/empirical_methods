@@ -1,20 +1,22 @@
-E=rnorm(240)
-X=cumsum(E)
-plot(X,type="l")
+data_file = "C:/dev/empirical_methods/data/Tbill10yr.csv"
+df = read.csv(file = data_file,header = TRUE)
+yield = df$VALUE
 
-lags=0
-z=diff(X)
-n=length(z)
-z.diff=embed(z, lags+1)[,1]
-z.lag.1=X[(lags+1):n]
-summary(lm(z.diff~0+z.lag.1 ))
+yield_diff = diff(yield)
 
-summary(lm(z.diff~0+z.lag.1 ))$coefficients
+#library(tseries)
+#adf.test(yield,k =0)
+        
 
-library(urca)
-df=ur.df(X,type="none",lags=0)
-df
+#Dickey-Fuller = -1.3199, Lag order = 0, p-value = 0.8662
 
-qnorm(c(.01,.05,.1)/2)
+#"nc" for a regression with no intercept (constant) nor time trend
+#"c" for a regression with an intercept (constant) but no time trend
+#"ct" for a regression with an intercept (constant) and a time trend. 
+#The default is "c".
 
-summary(df)
+
+
+library(fUnitRoots)
+adfTest(yield,lags = 4,type = "ct")
+adfTest(yield_diff,lags = 4,type = "ct")
